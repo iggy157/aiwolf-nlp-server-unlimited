@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/aiwolfdial/aiwolf-nlp-server/model"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/model"
 )
 
 type JSONLogger struct {

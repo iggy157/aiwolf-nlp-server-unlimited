@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aiwolfdial/aiwolf-nlp-server/core"
-	"github.com/aiwolfdial/aiwolf-nlp-server/model"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/core"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/model"
 	"github.com/joho/godotenv"
 	"golang.org/x/exp/rand"
 )

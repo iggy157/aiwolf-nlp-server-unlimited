@@ -16,8 +16,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/aiwolfdial/aiwolf-nlp-server/model"
-	"github.com/aiwolfdial/aiwolf-nlp-server/util"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/model"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/util"
 	"github.com/gin-gonic/gin"
 	"github.com/grafov/m3u8"
 )

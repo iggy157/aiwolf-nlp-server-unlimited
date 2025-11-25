@@ -9,7 +9,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/aiwolfdial/aiwolf-nlp-server/model"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/model"
 )
 
 func Analyzer(config model.Config) {

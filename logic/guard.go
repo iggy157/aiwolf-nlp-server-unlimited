@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/aiwolfdial/aiwolf-nlp-server/model"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/model"
 )
 
 func (g *Game) doGuard() {

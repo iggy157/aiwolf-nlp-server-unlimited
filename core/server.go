@@ -12,10 +12,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/aiwolfdial/aiwolf-nlp-server/logic"
-	"github.com/aiwolfdial/aiwolf-nlp-server/model"
-	"github.com/aiwolfdial/aiwolf-nlp-server/service"
-	"github.com/aiwolfdial/aiwolf-nlp-server/util"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/logic"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/model"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/service"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/util"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )

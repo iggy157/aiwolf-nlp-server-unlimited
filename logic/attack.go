@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/aiwolfdial/aiwolf-nlp-server/model"
-	"github.com/aiwolfdial/aiwolf-nlp-server/util"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/model"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/util"
 )
 
 func (g *Game) getAttackVotedCandidates(votes []model.Vote) []model.Agent {

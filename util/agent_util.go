@@ -3,7 +3,7 @@ package util
 import (
 	"math/rand"
 
-	"github.com/aiwolfdial/aiwolf-nlp-server/model"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/model"
 )
 
 func SelectRandomAgent(agents []model.Agent) model.Agent {

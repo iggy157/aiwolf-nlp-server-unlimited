@@ -4,8 +4,8 @@ import (
 	"log/slog"
 	"testing"
 
-	"github.com/aiwolfdial/aiwolf-nlp-server/core"
-	"github.com/aiwolfdial/aiwolf-nlp-server/model"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/core"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/model"
 )
 
 func TestInitializeMatchOptimizer(t *testing.T) {

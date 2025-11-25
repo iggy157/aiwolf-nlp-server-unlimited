@@ -6,7 +6,7 @@ import (
 	"math/rand/v2"
 	"sync"
 
-	"github.com/aiwolfdial/aiwolf-nlp-server/model"
+	"github.com/iggy157/aiwolf-nlp-server-unlimited/model"
 )
 
 type WaitingRoom struct {

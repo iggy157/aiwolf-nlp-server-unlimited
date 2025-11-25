@@ -1,4 +1,4 @@
-module github.com/aiwolfdial/aiwolf-nlp-server
+module github.com/iggy157/aiwolf-nlp-server-unlimited
 
 go 1.24.0
 

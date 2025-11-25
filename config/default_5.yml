@@ -196,9 +196,9 @@ game:
     max_length:
       count_in_word: false
       per_talk: -1
-      mention_length: 50
+      mention_length: -1
       per_agent: -1
-      base_length: 50
+      base_length: -1
     max_skip: 0
   whisper:
     max_count:
@@ -207,9 +207,9 @@ game:
     max_length:
       count_in_word: false
       per_talk: -1
-      mention_length: 50
+      mention_length: -1
       per_agent: -1
-      base_length: 50
+      base_length: -1
     max_skip: 0
   vote:
     max_count: 1

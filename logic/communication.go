@@ -94,97 +94,102 @@ func (g *Game) conductCommunication(request model.Request) {
 			}
 
 			if text != model.T_OVER && text != model.T_SKIP && text != model.T_FORCE_SKIP {
-				mention := ""
-				commonText := ""
-				mentionText := ""
-				
-				if talkSetting.MaxLength.PerAgent != nil || talkSetting.MaxLength.BaseLength != nil {
-					baseLength := 0
-					if talkSetting.MaxLength.BaseLength != nil {
-						baseLength = *talkSetting.MaxLength.BaseLength
-					}
+				if talkSetting.MaxLength.PerAgent != nil || talkSetting.MaxLength.BaseLength != nil || talkSetting.MaxLength.PerTalk != nil {
+					mention := ""
+					commonText := ""
+					mentionText := ""
 
-					mentionIdx := -1
-					if talkSetting.MaxLength.MentionLength != nil {
-						for _, a := range g.agents {
-							if a != agent {
-								if strings.Contains(text, "@"+a.String()) {
-									if mentionIdx == -1 {
-										mention = "@" + a.String()
-										mentionIdx = strings.Index(text, mention)
-									}
-									if strings.Index(text, mention) < mentionIdx {
-										mention = "@" + a.String()
-										mentionIdx = strings.Index(text, mention)
+					if talkSetting.MaxLength.PerAgent != nil || talkSetting.MaxLength.BaseLength != nil {
+						baseLength := 0
+						if talkSetting.MaxLength.BaseLength != nil {
+							baseLength = *talkSetting.MaxLength.BaseLength
+						}
+
+						mentionIdx := -1
+						if talkSetting.MaxLength.MentionLength != nil {
+							for _, a := range g.agents {
+								if a != agent {
+									if strings.Contains(text, "@"+a.String()) {
+										if mentionIdx == -1 {
+											mention = "@" + a.String()
+											mentionIdx = strings.Index(text, mention)
+										}
+										if strings.Index(text, mention) < mentionIdx {
+											mention = "@" + a.String()
+											mentionIdx = strings.Index(text, mention)
+										}
 									}
 								}
 							}
 						}
-					}
 
-					if mentionIdx != -1 {
-						remainLength := baseLength
-						if value, exists := remainLengthMap[*agent]; exists {
-							remainLength += value
-						}
-						mentionBefore := text[:mentionIdx]
-						mentionAfter := text[mentionIdx+len(mention):]
-
-						mention = " " + mention + " "
-
-						commonText = util.TrimLength(mentionBefore, remainLength, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
-						cost := util.CountLength(mentionBefore, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces) - baseLength
-						if cost > 0 {
-							if _, exists := remainLengthMap[*agent]; exists {
-								remainLengthMap[*agent] -= cost
+						if mentionIdx != -1 {
+							remainLength := baseLength
+							if value, exists := remainLengthMap[*agent]; exists {
+								remainLength += value
 							}
-						}
+							mentionBefore := text[:mentionIdx]
+							mentionAfter := text[mentionIdx+len(mention):]
 
-						remainLength = *talkSetting.MaxLength.MentionLength
-						if value, exists := remainLengthMap[*agent]; exists {
-							remainLength += value
-						}
-						mentionText = util.TrimLength(mentionAfter, remainLength, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
-						mentionCost := util.CountLength(mentionText, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces) - *talkSetting.MaxLength.MentionLength
-						if mentionCost > 0 {
-							if _, exists := remainLengthMap[*agent]; exists {
-								remainLengthMap[*agent] -= mentionCost
+							mention = " " + mention + " "
+
+							commonText = util.TrimLength(mentionBefore, remainLength, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
+							cost := util.CountLength(mentionBefore, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces) - baseLength
+							if cost > 0 {
+								if _, exists := remainLengthMap[*agent]; exists {
+									remainLengthMap[*agent] -= cost
+								}
+							}
+
+							remainLength = *talkSetting.MaxLength.MentionLength
+							if value, exists := remainLengthMap[*agent]; exists {
+								remainLength += value
+							}
+							mentionText = util.TrimLength(mentionAfter, remainLength, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
+							mentionCost := util.CountLength(mentionText, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces) - *talkSetting.MaxLength.MentionLength
+							if mentionCost > 0 {
+								if _, exists := remainLengthMap[*agent]; exists {
+									remainLengthMap[*agent] -= mentionCost
+								}
+							}
+						} else {
+							remainLength := baseLength
+							if value, exists := remainLengthMap[*agent]; exists {
+								remainLength += value
+							}
+							commonText = util.TrimLength(text, remainLength, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
+							cost := util.CountLength(text, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces) - baseLength
+							if cost > 0 {
+								if _, exists := remainLengthMap[*agent]; exists {
+									remainLengthMap[*agent] -= cost
+								}
 							}
 						}
 					} else {
-						remainLength := baseLength
-						if value, exists := remainLengthMap[*agent]; exists {
-							remainLength += value
-						}
-						commonText = util.TrimLength(text, remainLength, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
-						cost := util.CountLength(text, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces) - baseLength
-						if cost > 0 {
-							if _, exists := remainLengthMap[*agent]; exists {
-								remainLengthMap[*agent] -= cost
-							}
-						}
+						// PerTalkのみが有効な場合、textをそのままcommonTextに設定
+						commonText = text
 					}
-				}
-				if talkSetting.MaxLength.PerTalk != nil {
-					commonLength := util.CountLength(commonText, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
-					mentionLength := util.CountLength(mentionText, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
-					totalLength := commonLength + mentionLength
+					if talkSetting.MaxLength.PerTalk != nil {
+						commonLength := util.CountLength(commonText, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
+						mentionLength := util.CountLength(mentionText, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
+						totalLength := commonLength + mentionLength
 
-					if totalLength > *talkSetting.MaxLength.PerTalk {
-						if commonLength > *talkSetting.MaxLength.PerTalk{
-							commonText = util.TrimLength(commonText, *talkSetting.MaxLength.PerTalk, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
-							mention = ""
-							mentionText = ""
-						} else {
-							mentionText = util.TrimLength(mentionText, *talkSetting.MaxLength.PerTalk - commonLength, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
+						if totalLength > *talkSetting.MaxLength.PerTalk {
+							if commonLength > *talkSetting.MaxLength.PerTalk {
+								commonText = util.TrimLength(commonText, *talkSetting.MaxLength.PerTalk, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
+								mention = ""
+								mentionText = ""
+							} else {
+								mentionText = util.TrimLength(mentionText, *talkSetting.MaxLength.PerTalk-commonLength, *talkSetting.MaxLength.CountInWord, *talkSetting.MaxLength.CountSpaces)
+							}
+							slog.Warn("発言が最大文字数を超えたため、切り捨てました", "id", g.id, "agent", agent.String())
 						}
-						slog.Warn("発言が最大文字数を超えたため、切り捨てました", "id", g.id, "agent", agent.String())
 					}
-				}
-				text = commonText + mention + mentionText
-				if utf8.RuneCountInString(text) == 0 {
-					text = model.T_OVER
-					slog.Warn("文字数が0のため、発言をオーバーに置換しました", "id", g.id, "agent", agent.String())
+					text = commonText + mention + mentionText
+					if utf8.RuneCountInString(text) == 0 {
+						text = model.T_OVER
+						slog.Warn("文字数が0のため、発言をオーバーに置換しました", "id", g.id, "agent", agent.String())
+					}
 				}
 			}
 

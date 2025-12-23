@@ -8,9 +8,9 @@ server:
   authentication:
     enable: false
   timeout:
-    action: 60s
-    response: 120s
-    acceptable: 5s
+    action: 876000h
+    response: 876000h
+    acceptable: 876000h
   max_continue_error_ratio: 0.2
 
 game:
@@ -25,9 +25,9 @@ game:
       count_in_word: false
       count_spaces: false
       per_talk: -1
-      mention_length: 50
+      mention_length: -1
       per_agent: -1
-      base_length: 50
+      base_length: -1
     max_skip: 0
   whisper:
     max_count:
@@ -37,9 +37,9 @@ game:
       count_in_word: false
       count_spaces: false
       per_talk: -1
-      mention_length: 50
+      mention_length: -1
       per_agent: -1
-      base_length: 50
+      base_length: -1
     max_skip: 0
   vote:
     max_count: 1
